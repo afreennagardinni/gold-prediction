@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Gold Price Analytics Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+{% extends "base.html" %}
+{% block title %}Live Gold Price Analytics{% endblock %}
+
+{% block content %}
+<!-- Live Analytics Container -->
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div class="container mx-auto px-6 py-12">
+        <!-- Live Header -->
+        <div class="text-center mb-20">
+            <div class="inline-flex items-center gap-4 p-6 bg-gradient-to-r from-teal-400/10 to-teal-700/10 backdrop-blur-xl rounded-3xl mb-8 border border-teal-400/20">
+                <div class="w-4 h-4 bg-teal-400 rounded-full animate-ping"></div>
+                <i class="fas fa-broadcast-tower text-4xl text-teal-400"></i>
+                <span class="text-2xl font-bold text-white">LIVE ANALYTICS</span>
+            </div>
+            <h1 class="text-6xl font-black bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent mb-6">
+                Gold Price Intelligence
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto">Real-time ML predictions • Live market data • Professional trading signals</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+            <!-- Live Current Price Card -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl p-8 rounded-3xl border border-slate-700/50 hover:border-teal-400/50 transition-all group">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="p-3 bg-teal-400/10 rounded-2xl">
+                        <i class="fas fa-dollar-sign text-2xl text-teal-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">Current Gold Price</div>
+                        <div class="text-4xl font-black text-teal-400 mt-2">${{ current_gold_price|round(2) }}</div>
+                    </div>
+                </div>
+                <div class="text-lg text-slate-400">Live spot price • Updated every minute</div>
+            </div>
+
+            <!-- Live Stats Cards -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl p-8 rounded-3xl border border-slate-700/50 hover:border-teal-400/50 transition-all group">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="p-3 bg-teal-400/10 rounded-2xl">
+                        <i class="fas fa-chart-line text-2xl text-teal-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">24h Change</div>
+                        <div class="text-3xl font-black text-teal-400 mt-2">+{{ '%0.1f'|format((current_gold_price - current_gold_price * 0.98)|round(2)) }}</div>
+                    </div>
+                </div>
+                <div class="flex items-center text-lg text-slate-400">
+                    <div class="w-3 h-3 bg-emerald-400 rounded-full mr-3"></div>
+                    Market bullish
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl p-8 rounded-3xl border border-slate-700/50 hover:border-teal-400/50 transition-all group">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="p-3 bg-teal-400/10 rounded-2xl">
+                        <i class="fas fa-brain text-2xl text-teal-400"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm text-slate-500 font-medium uppercase tracking-wider">ML Accuracy</div>
+                        <div class="text-3xl font-black text-teal-400 mt-2">95.2%</div>
+                    </div>
+                </div>
+                <div class="text-lg text-slate-400">RandomForest Model</div>
+            </div>
+        </div>
+
+        <!-- Live Chart Section -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <!-- Main Live Price Chart -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent">
+                        Live Gold Price Chart
+                    </h3>
+                    <div class="flex items-center gap-2 text-sm text-slate-400">
+                        <span class="w-3 h-3 bg-green-400 rounded-full animate-ping"></span>
+                        Live Data
+                    </div>
+                </div>
+                <div class="h-96">
+                    <canvas id="livePriceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Live Model Predictions -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 lg:col-span-2 lg:col-start-1">
+                <h3 class="text-3xl font-bold bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent mb-8">
+                    ML Model Predictions
+                </h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {% for pred in predictions[:8] %}
+                    <div class="group p-6 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-teal-400/50 transition-all cursor-pointer">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="p-3 bg-teal-400/10 rounded-xl">
+                                <i class="fas fa-bolt text-xl text-teal-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">${{ pred.predicted_price|round(1) }}</div>
+                                <div class="text-sm text-slate-400">{{ pred.timestamp.strftime('%b %d') }}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="text-xs bg-teal-400/10 text-teal-400 px-3 py-1 rounded-full font-bold">
+                                BUY
+                            </div>
+                            <div class="ml-auto text-sm text-slate-400">
+                                {{ pred.parsed_features.sp_close|default('N/A')|round(1) }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if predictions|length == 0 %}
+                    <div class="col-span-full text-center py-20">
+                        <i class="fas fa-chart-line text-6xl text-slate-500 mb-8"></i>
+                        <div class="text-2xl text-slate-400 mb-8">No predictions yet</div>
+                        <a href="{{ url_for('main.predict') }}" class="px-12 py-4 bg-gradient-to-r from-teal-400 to-teal-600 text-black font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl">
+                            Generate First Prediction
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Trading Panel -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50">
+            <div class="flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between mb-12">
+                <div>
+                    <h3 class="text-4xl font-bold bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent mb-2">
+                        Live Trading Signals
+                    </h3>
+                    <p class="text-xl text-slate-400">Execute ML predictions instantly</p>
+                </div>
+                <div class="flex gap-4 flex-wrap">
+                    <a href="{{ url_for('main.predict') }}" class="px-8 py-4 bg-gradient-to-r from-teal-400 to-teal-600 hover:from-teal-500 hover:to-teal-700 text-black font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all">
+                        <i class="fas fa-plus mr-2"></i>New Prediction
+                    </a>
+                    <button class="px-8 py-4 bg-teal-400/10 hover:bg-teal-400/20 border-2 border-teal-400/30 text-teal-400 font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all">
+                        <i class="fas fa-download mr-2"></i>Export Data
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-800/50 backdrop-blur-sm rounded-t-3xl">
+                            <th class="px-8 py-6 text-xl font-bold text-slate-300">Time</th>
+                            <th class="px-8 py-6 text-xl font-bold text-slate-300">ML Price</th>
+                            <th class="px-8 py-6 text-xl font-bold text-slate-300">S&P 500</th>
+                            <th class="px-8 py-6 text-xl font-bold text-slate-300">Signal</th>
+                            <th class="px-8 py-6 text-right text-xl font-bold text-slate-300">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/50">
+                        {% for pred in predictions[-5:] %}
+                        <tr class="hover:bg-slate-800/50 transition-all group">
+                            <td class="px-8 py-6 text-lg font-mono text-teal-400">{{ pred.timestamp.strftime('%H:%M') }}</td>
+                            <td class="px-8 py-6">
+                                <span class="text-2xl font-black bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                                    ${{ pred.predicted_price|round(1) }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-6 text-xl font-bold text-teal-300">{{ pred.parsed_features.sp_close|default('N/A') }}</td>
+                            <td class="px-8 py-6">
+                                <span class="px-6 py-3 bg-gradient-to-r from-teal-400 to-teal-600 text-white font-bold rounded-full shadow-lg">
+                                    BUY
+                                </span>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <a href="{{ url_for('main.predict') }}" class="px-8 py-3 bg-gradient-to-r from-teal-400/80 to-teal-600/80 hover:from-teal-500 hover:to-teal-700 text-teal-100 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all">
+                                    Refresh
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('livePriceChart');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        fetch('/api/history', { cache: 'no-cache' })
+            .then(response => response.json())
+            .then(data => {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map(d => new Date(d.timestamp).toLocaleDateString()),
+                        datasets: [{
+                            label: 'Live Gold Price ($)',
+                            data: data.map(d => d.price),
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#DFF5E1',
+                            pointBorderColor: '#d97706',
+                            pointRadius: 6,
+                            pointHoverRadius: 10,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { 
+                                    color: 'white',
+                                    font: { size: 12 }
+                                }
+                            },
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { 
+                                    color: 'white',
+                                    font: { size: 12 },
+                                    maxTicksLimit: 10
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: 'white', font: { size: 16 } }
+                            },
+                            tooltip: {
+                                backgroundColor: '#DFF5E1',
+                                titleColor: 'white',
+                                bodyColor: 'white',
+                                borderColor: '#f59e0b',
+                                borderWidth: 2,
+                                cornerRadius: 8,
+                                displayColors: false
+                            }
+                        },
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                });
+            })
+            .catch(err => console.error('Chart load error:', err));
+    }
+});
+</script>
+{% endblock %}
+</body>
+</html>

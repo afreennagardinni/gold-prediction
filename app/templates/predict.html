@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Predict Gold Price{% endblock %}
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="max-w-2xl w-full glass p-12 rounded-3xl shadow-2xl backdrop-blur-xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mb-2">
+                🔮 Predict Gold Price
+            </h2>
+            <p class="text-slate-400 text-lg">Enter market indicators for instant ML prediction</p>
+        </div>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                {{ form.sp_open.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.sp_open(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="S&P 500 Open (e.g. 4500.0)") }}
+                
+                {{ form.sp_close.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.sp_close(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="S&P 500 Close (e.g. 4520.0)") }}
+                
+                {{ form.dj_close.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.dj_close(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="DJIA Close (e.g. 38000.0)") }}
+                
+                {{ form.eu_price.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.eu_price(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="EU Price (e.g. 1.08)") }}
+                
+                {{ form.usb_price.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.usb_price(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="USB Price (e.g. 105.0)") }}
+                
+                {{ form.uso_close.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.uso_close(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="USO Close (e.g. 75.5)") }}
+                
+                {{ form.gdx_close.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.gdx_close(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="GDX Close (e.g. 35.2)") }}
+                
+                {{ form.eu_trend.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.eu_trend(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="EU Trend (e.g. 1.0)") }}
+                
+                {{ form.of_trend.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.of_trend(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="OF Trend (e.g. 1.0)") }}
+                
+                {{ form.os_trend.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                {{ form.os_trend(class="glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all w-full", placeholder="OS Trend (e.g. 1.0)") }}
+            </div>
+            
+            {{ form.submit(class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold py-6 px-8 rounded-2xl shadow-xl transform hover:scale-[1.02] hover:shadow-2xl transition-all text-xl") }}
+        </form>
+        
+        <p class="mt-8 text-center text-sm text-slate-500">
+            Powered by RandomForest ML (R² ~0.95) | Recent market data recommended
+        </p>
+    </div>
+</div>
+{% endblock %}

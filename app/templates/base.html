@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gold Price Predictor{% endblock %}</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- ✅ Bootstrap 5 CDN (ADDED) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles (premium palette) -->
+    <style>
+        :root {
+            --gold-50: #fff8ec;
+            --gold-100: #fbe8b3;
+            --gold-500: #f6b042;
+            --gold-600: #f39c12;
+                --teal-400: #14b8a6;
+                --teal-700: #0d9488;
+                --teal-800: #0f766e;
+                --onyx-900: #07121a;
+                --card-bg-a: rgba(20,184,166,0.28);
+                --card-bg-b: rgba(7,18,26,0.9);
+            --muted: rgba(255,255,255,0.75);
+        }
+
+        .gradient-bg { background: linear-gradient(135deg, var(--teal-800) 0%, var(--onyx-900) 100%); }
+        .glass { backdrop-filter: blur(10px); background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); }
+        .shadow-glow { box-shadow: 0 20px 40px rgba(16,185,129,0.08); }
+
+        /* Override global dark gradient used in templates for a premium look */
+        .bg-gradient-to-br.from-slate-900.via-purple-900.to-slate-900 {
+            background: linear-gradient(135deg, var(--teal-700), var(--onyx-900)) !important;
+        }
+
+        /* Cards: premium gradient + subtle gold border tint */
+        .from-slate-800.to-slate-900 {
+            background: linear-gradient(135deg, var(--card-bg-a), var(--card-bg-b)) !important;
+            border-color: rgba(246,176,66,0.06) !important;
+        }
+
+        /* Muted text tone */
+        .text-slate-400 { color: var(--muted) !important; }
+
+        /* Brand gradient text helper */
+        .brand {
+            background: linear-gradient(90deg, var(--gold-500), var(--gold-600));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        /* Utility: bold black text */
+        .text-black-bold { color: #000 !important; font-weight: 800 !important; }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="glass shadow-glow sticky top-0 z-50 backdrop-blur-xl bg-white/10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('main.index') }}" class="text-2xl brand">
+                        💰 GoldPredictor
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('main.dashboard') }}" class="px-6 py-3 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 hover:from-emerald-500/40 hover:to-teal-500/40 text-emerald-300 font-bold rounded-2xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/50 transition-all backdrop-blur-sm border border-emerald-500/30">Dashboard</a>
+                        <a href="{{ url_for('main.predict') }}" class="px-6 py-3 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 hover:from-orange-500/40 hover:to-yellow-500/40 text-orange-300 font-bold rounded-2xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/50 transition-all backdrop-blur-sm border border-orange-500/30">Predict</a>
+                        <a href="{{ url_for('main.logout') }}" class="px-6 py-3 bg-gradient-to-r from-rose-500/20 to-red-500/20 hover:from-rose-500/40 hover:to-red-500/40 text-rose-300 font-bold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-rose-500/50 transition-all backdrop-blur-sm border border-rose-500/30">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('main.login') }}" class="px-4 py-2 rounded-lg hover:bg-white/20 transition-all">Login</a>
+                        <a href="{{ url_for('main.register') }}" class="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/40 rounded-lg transition-all">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl text-black-bold">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'message' else category }} shadow-lg mb-6">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto glass p-8 text-center border-t border-white/10">
+        <p>&copy; 2024 Gold Price Predictor. Built with Flask + ML. Predictions for educational purposes.</p>
+    </footer>
+
+    <!-- ✅ Bootstrap JS (ADDED) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

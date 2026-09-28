@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Register - Gold Predictor{% endblock %}
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="max-w-md w-full glass p-12 rounded-3xl shadow-2xl backdrop-blur-xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent mb-2">
+                Create Account
+            </h2>
+            <p class="text-slate-400">Join to start predicting gold prices</p>
+        </div>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="space-y-6">
+                <div>
+                    {{ form.username.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.username(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition-all", placeholder="Choose username") }}
+                    {% for error in form.username.errors %}
+                        <p class="mt-1 text-sm text-red-400">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.email.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.email(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition-all", placeholder="your@email.com") }}
+                    {% for error in form.email.errors %}
+                        <p class="mt-1 text-sm text-red-400">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.password.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.password(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition-all", placeholder="Password") }}
+                    {% for error in form.password.errors %}
+                        <p class="mt-1 text-sm text-red-400">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.password2.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.password2(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition-all", placeholder="Repeat password") }}
+                    {% for error in form.password2.errors %}
+                        <p class="mt-1 text-sm text-red-400">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {{ form.submit(class="w-full bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transform hover:scale-[1.02] hover:shadow-2xl transition-all text-lg") }}
+            </div>
+        </form>
+        
+        <p class="mt-8 text-center text-slate-400">
+            Already have an account? 
+            <a href="{{ url_for('main.login') }}" class="text-yellow-400 hover:text-yellow-300 font-semibold">Sign in here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Login - Gold Predictor{% endblock %}
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-12">
+    <div class="max-w-md w-full glass p-12 rounded-3xl shadow-2xl backdrop-blur-xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent mb-2">
+                Welcome Back
+            </h2>
+            <p class="text-slate-400">Sign in to your account</p>
+        </div>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="space-y-6">
+                <div>
+                    {{ form.username.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.username(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all", placeholder="Username") }}
+                </div>
+                <div>
+                    {{ form.password.label(class="block text-sm font-medium text-slate-300 mb-2") }}
+                    {{ form.password(class="w-full glass p-4 rounded-xl text-white placeholder-slate-400 focus:ring-2 focus:ring-yellow-400 focus:outline-none transition-all", placeholder="Password") }}
+                </div>
+                <div class="flex items-center justify-between">
+                    {{ form.remember_me(class="rounded border-slate-600 text-emerald-400 focus:ring-yellow-400") }}
+                    {{ form.remember_me.label(class="ml-2 text-sm text-slate-400") }}
+                </div>
+                {{ form.submit(class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold py-4 px-8 rounded-2xl shadow-xl transform hover:scale-[1.02] hover:shadow-2xl transition-all text-lg") }}
+            </div>
+        </form>
+        
+        <p class="mt-8 text-center text-slate-400">
+            Don't have an account? 
+            <a href="{{ url_for('main.register') }}" class="text-emerald-400 hover:text-emerald-300 font-semibold">Sign up here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
